@@ -13,8 +13,11 @@ ffmpeg -y -i audio_section.flac -ar 24k audio_section_24k.flac
 echo "Subsampling at 12k"
 ffmpeg -y -i audio_section.flac -ar 12k audio_section_12k.flac
 
-echo "Extract left channel"
+echo "Extract left and right channels"
 ffmpeg -y -i audio_section.flac \
     -filter_complex "[0:a]channelsplit=channel_layout=stereo[left][right]" \
     -map "[left]" audio_section_left.flac \
     -map "[right]" audio_section_right.flac
+
+echo "Merge stereo channels"
+ffmpeg -y -i audio_section.flac -ac 1 audio_section_mono.flac
