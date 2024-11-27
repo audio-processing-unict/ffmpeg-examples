@@ -20,4 +20,18 @@ ffmpeg -y -i audio_section.flac \
     -map "[right]" audio_section_right.flac
 
 echo "Merge stereo channels"
-ffmpeg -y -i audio_section.flac -ac 1 audio_section_mono.flac
+ffmpeg -y -i audio_section.flac -ac 1 mono.flac
+
+echo "Fade in/out"
+ffmpeg -y -i mono.flac -af afade=t=in:ss=0:ns=44100 mono_fade_in.flac 
+ffmpeg -y -i mono.flac -af afade=t=out:ss=$((44100*4)):ns=44100 mono_fade_out.flac 
+ffmpeg -y -i mono.flac -af "afade=t=in:ss=0:ns=44100,afade=t=out:ss=$((44100*4)):ns=44100" mono_fade_both.flac 
+
+echo "Compressor"
+ffmpeg -y -i mono.flac -af acompressor=threshold=0.0125  mono_compressed.flac 
+
+echo "Tremolo"
+ffmpeg -y -i mono.flac -af tremolo=f=10:d=0.5 mono_tremolo.flac 
+
+echo "Vibrato"
+ffmpeg -y -i mono.flac -af vibrato=f=4:d=0.5 mono_vibrato.flac 
