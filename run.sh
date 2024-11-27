@@ -35,3 +35,7 @@ ffmpeg -y -i mono.flac -af tremolo=f=10:d=0.5 mono_tremolo.flac
 
 echo "Vibrato"
 ffmpeg -y -i mono.flac -af vibrato=f=4:d=0.5 mono_vibrato.flac 
+
+echo "Frequency shift"
+ffmpeg -y -i mono.flac -af afreqshift=shift=100 mono_higher_shift.flac 
+ffmpeg -y -i mono.flac -af afreqshift=shift=-100 mono_lower_shift.flac 
