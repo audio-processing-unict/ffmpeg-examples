@@ -48,3 +48,28 @@ ffmpeg -y -i mono.flac -af "compand=attacks=0:points=-40/-169|-10/-4|0/0" mono_e
 
 echo "Compressor (with compand)"
 ffmpeg -y -i mono.flac -af "compand=attacks=0:points=-40/-10|-4/-10|0/0" mono_compand_compressed.flac 
+
+echo "Lossy MP3 compression at 96kbps"
+ffmpeg -y -i mono.flac -c:a libmp3lame -b:a 96k mono_compressed_96k.mp3
+
+echo "Lossy MP3 compression at 64kbps"
+ffmpeg -y -i mono.flac -c:a libmp3lame -b:a 64k mono_compressed_64k.mp3
+
+echo "Lossy MP3 compression at 32kbps"
+ffmpeg -y -i mono.flac -c:a libmp3lame -b:a 32k mono_compressed_32k.mp3
+
+echo "Concatenation"
+ffmpeg -y -f concat -i compression_concat.txt mono_compressed_all.mp3
+
+echo "Looped 4 times (stream_loop = repeat X more times)"
+ffmpeg -y -stream_loop 3 -i mono.flac mono_looped.flac
+
+echo "Frequency spectrum"
+ffmpeg -y -i mono_compressed_96k.mp3 -lavfi showspectrumpic=s=hd720 compressed_96k.jpg
+ffmpeg -y -i mono_compressed_32k.mp3 -lavfi showspectrumpic=s=hd720 compressed_32k.jpg
+
+echo "Speed-up"
+ffmpeg -y -i mono.flac -filter:a "atempo=2.0" mono_double_speed.wav
+
+echo "Slow-down"
+ffmpeg -y -i mono.flac -filter:a "atempo=0.5" mono_half_speed.wav
