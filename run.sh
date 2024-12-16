@@ -27,9 +27,6 @@ ffmpeg -y -i mono.flac -af afade=t=in:ss=0:ns=44100 mono_fade_in.flac
 ffmpeg -y -i mono.flac -af afade=t=out:ss=$((44100*4)):ns=44100 mono_fade_out.flac 
 ffmpeg -y -i mono.flac -af "afade=t=in:ss=0:ns=44100,afade=t=out:ss=$((44100*4)):ns=44100" mono_fade_both.flac 
 
-echo "Compressor"
-ffmpeg -y -i mono.flac -af acompressor=threshold=0.0125  mono_compressed.flac 
-
 echo "Tremolo"
 ffmpeg -y -i mono.flac -af tremolo=f=10:d=0.5 mono_tremolo.flac 
 
@@ -42,3 +39,12 @@ ffmpeg -y -i mono.flac -af aecho=in_gain=1.0:out_gain=1.0:delays=400:decays=0.2 
 echo "Frequency shift"
 ffmpeg -y -i mono.flac -af afreqshift=shift=100 mono_higher_shift.flac 
 ffmpeg -y -i mono.flac -af afreqshift=shift=-100 mono_lower_shift.flac 
+
+echo "Compressor"
+ffmpeg -y -i mono.flac -af acompressor=threshold=-60dB  mono_compressed.flac 
+
+echo "Expander"
+ffmpeg -y -i mono.flac -af "compand=attacks=0:points=-40/-169|-10/-4|0/0" mono_expanded.flac 
+
+echo "Compressor (with compand)"
+ffmpeg -y -i mono.flac -af "compand=attacks=0:points=-40/-10|-4/-10|0/0" mono_compand_compressed.flac 
